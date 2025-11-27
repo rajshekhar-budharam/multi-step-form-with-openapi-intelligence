@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+}
+
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+.focus-outline:focus {
+  outline: 3px solid rgba(59,130,246,0.5);
+  outline-offset: 2px;
+}
+
+/* Government-style typography and form sizing */
+/* Use a neutral, highly legible system font stack (Windows-friendly) */
+body, input, select, textarea, button, label {
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #0f172a; /* gray-900 */
+}
+
+/* Base font sizing for readable forms */
+body {
+  font-size: 16px; /* comfortable reading size */
+  line-height: 1.5;
+}
+
+/* Headings: slightly larger and semibold to match formal forms */
+h1 { font-size: 20px; font-weight: 600; }
+h2 { font-size: 18px; font-weight: 600; }
+h3 { font-size: 16px; font-weight: 600; }
+
+/* Labels in forms should be clear and slightly smaller than body */
+label, .gov-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0b1220;
+  display: block;
+}
+
+/* Inputs and selects: consistent comfortable sizing */
+input, select, textarea {
+  font-size: 15px;
+  line-height: 1.4;
+  color: #0b1220;
+}
+
+/* Buttons: clear, readable text */
+button, .gov-btn {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Smaller secondary text */
+.gov-note, small {
+  font-size: 13px;
+  color: #374151; /* gray-700 */
+}
+
+/* Ensure form fields inherit sizing when Tailwind utilities are used */
+.w-full input, .w-full textarea, .w-full select { font-size: 15px; }

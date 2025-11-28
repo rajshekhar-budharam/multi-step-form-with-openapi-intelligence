@@ -28,7 +28,7 @@ Open http://localhost:5173
 
 Environment variable for OpenAI (optional):
 
-- Create/Replace your_key `VITE_OPENAI_API_KEY=your_key` in the '.env' to enable the Help Me Write button to call OpenAI directly.
+- Replace your_key `VITE_OPENAI_API_KEY=your_key` in the '.env' to call OpenAI API.
 
 Notes:
 

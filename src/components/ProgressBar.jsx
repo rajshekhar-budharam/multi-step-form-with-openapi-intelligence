@@ -1,6 +1,6 @@
-import React from 'react'
+import React, {memo} from 'react'
 
-export default function ProgressBar({ step, total, completedSteps = [] }) {
+const ProgressBar = ({ step, total, completedSteps = [] }) => {
   return (
     <div className="w-full">
       <div className="flex items-center justify-between gap-2">
@@ -40,3 +40,5 @@ export default function ProgressBar({ step, total, completedSteps = [] }) {
     </div>
   )
 }
+
+export default memo(ProgressBar);

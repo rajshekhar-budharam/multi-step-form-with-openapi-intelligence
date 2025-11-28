@@ -1,7 +1,9 @@
-import React from 'react'
+import React, {memo} from 'react'
 
-export default function Modal({ open, title, children, onClose }) {
-  if (!open) return null
+const Modal = ({ open, title, children, onClose }) => {
+  
+  if (!open) return null;
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true">
       <div className="absolute inset-0 bg-black opacity-40" onClick={onClose} />
@@ -15,3 +17,5 @@ export default function Modal({ open, title, children, onClose }) {
     </div>
   )
 }
+
+export default memo(Modal);

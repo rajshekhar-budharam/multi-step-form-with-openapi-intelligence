@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
-import ErrorBoundary from './components/ErrorBoundary'
-import MultiStepForm from './components/MultiStepForm'
-import { t } from './i18n'
+import React, { useState } from 'react';
+import ErrorBoundary from './components/ErrorBoundary';
+import MultiStepForm from './multi-step-form';
+import { t } from './i18n';
 
 export default function App() {
   const [lang, setLang] = useState('en')

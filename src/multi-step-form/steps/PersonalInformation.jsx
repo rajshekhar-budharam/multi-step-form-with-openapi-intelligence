@@ -1,7 +1,7 @@
 import React, { useState, useCallback, memo } from "react";
 import { t } from "../../i18n";
-import { validatePersonalInformation } from "../../utils/validation";
-import { GENDER_OPTIONS } from "../../utils/constants";
+import { validatePersonalInformation } from "../../utils/helper/validation";
+import { GENDER_OPTIONS } from "../../utils/helper/constants";
 import Select from "../../components/Select";
 import FormField from "../../components/FormField";
 

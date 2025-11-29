@@ -1,4 +1,10 @@
-import React, { memo, useReducer, useEffect, useCallback } from "react";
+import React, {
+  memo,
+  useReducer,
+  useEffect,
+  useCallback,
+  useMemo,
+} from "react";
 import ProgressBar from "../components/ProgressBar";
 import {
   PersonalInformation,
@@ -13,12 +19,14 @@ import {
   validate as validateStep3,
 } from "./steps/SituationDescription";
 
-import { mockSubmit } from "../utils/api";
+import { mockSubmit } from "../api";
 import { t } from "../i18n";
 import { ACTIONS, formReducer, initialState } from "../reducers/formReducer";
-import StepNavigationButtons from "./step-navigation";
+import StepNavigationButtons from "./StepNavigation";
 
 const STORAGE_KEY = "multiStepFormData_v1";
+
+// Define steps with their components and validation functions
 const steps = [
   { component: PersonalInformation, validate: validateStep1 },
   { component: FamilyFinancialInfo, validate: validateStep2 },
@@ -27,16 +35,26 @@ const steps = [
 
 const MultiStepForm = ({ lang = "en" }) => {
   const total = steps.length;
+  // custom reducer for form state management
   const [state, dispatch] = useReducer(formReducer, initialState);
   const { step, form, showErrors, loading } = state;
 
-  const Current = steps[step].component;
-  const validate = steps[step].validate;
+  // memoize step component + validator
+  const { Current, validate } = useMemo(
+    () => ({
+      Current: steps[step].component,
+      validate: steps[step].validate,
+    }),
+    [step]
+  );
 
+  // Load saved form
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      raw && dispatch({ type: ACTIONS.LOAD_FORM, payload: JSON.parse(raw) });
+      if (raw) {
+        dispatch({ type: ACTIONS.LOAD_FORM, payload: JSON.parse(raw) });
+      }
     } catch {
       dispatch({
         type: ACTIONS.SET_ERROR,
@@ -45,6 +63,7 @@ const MultiStepForm = ({ lang = "en" }) => {
     }
   }, []);
 
+  // Save form locally
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(form));
@@ -56,40 +75,60 @@ const MultiStepForm = ({ lang = "en" }) => {
     }
   }, [form]);
 
-  const validateAll = () =>
-    steps.reduce((acc, s) => ({ ...acc, ...s.validate(form, lang) }), {});
+  // Validate all steps
+  const validateAll = useCallback(() => {
+    return steps.reduce(
+      (acc, s) => ({ ...acc, ...s.validate(form, lang) }),
+      {}
+    );
+  }, [form, lang]);
 
-  const getCompletedSteps = () =>
-    steps
+  // Get completed steps
+  const getCompletedSteps = useCallback(() => {
+    return steps
       .map((s, i) =>
         Object.keys(s.validate(form, lang)).length === 0 ? i : null
       )
       .filter((x) => x !== null);
+  }, [form, lang]);
 
-  const isCurrentStepValid = () =>
-    Object.keys(validate(form, lang)).length === 0;
+  // Check if current step is valid
+  const isCurrentStepValid = useCallback(() => {
+    return Object.keys(validate(form, lang)).length === 0;
+  }, [validate, form, lang]);
 
-  const isFormValid = () =>
-    steps.every((s) => Object.keys(s.validate(form, lang)).length === 0);
+  // Check if entire form is valid
+  const isFormValid = useCallback(() => {
+    return steps.every((s) => Object.keys(s.validate(form, lang)).length === 0);
+  }, [form, lang]);
 
-  const nextStep = () => {
+  // Navigate to next step
+  const nextStep = useCallback(() => {
     const errs = validate(form, lang);
+
+    // enable showErrors if there are validation errors
     dispatch({
       type: ACTIONS.SET_SHOW_ERRORS,
       payload: !!Object.keys(errs).length,
     });
-
-    if (!Object.keys(errs).length)
+    // if no errors, go to next step
+    if (!Object.keys(errs).length) {
       dispatch({ type: ACTIONS.NEXT_STEP, payload: { total } });
-  };
+    }
+  }, [form, lang, validate, total]);
 
-  const prevStep = () => dispatch({ type: ACTIONS.PREV_STEP });
+  // Navigate to previous step
+  const prevStep = useCallback(() => {
+    dispatch({ type: ACTIONS.PREV_STEP });
+  }, []);
 
-  const handleSubmit = async () => {
+  // Handle form submission
+  const handleSubmit = useCallback(async () => {
     dispatch({ type: ACTIONS.SET_LOADING, payload: true });
 
     try {
       const res = await mockSubmit(form, { delay: 800 });
+      // on success, clear local storage and show success message
       if (res.ok) {
         localStorage.removeItem(STORAGE_KEY);
         alert("Submitted successfully (mock)");
@@ -101,19 +140,32 @@ const MultiStepForm = ({ lang = "en" }) => {
     } finally {
       dispatch({ type: ACTIONS.SET_LOADING, payload: false });
     }
-  };
+  }, [form]);
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    const errs = validateAll();
+  // Handle form submission at each step
+  const onSubmit = useCallback(
+    (e) => {
+      e.preventDefault();
 
-    dispatch({
-      type: ACTIONS.SET_SHOW_ERRORS,
-      payload: !!Object.keys(errs).length,
-    });
+      const errs = validateAll();
+      // enable showErrors if there are validation errors
+      dispatch({
+        type: ACTIONS.SET_SHOW_ERRORS,
+        payload: !!Object.keys(errs).length,
+      });
 
-    if (!Object.keys(errs).length) handleSubmit();
-  };
+      // if no errors, either go to next step or submit
+      if (!Object.keys(errs).length) {
+        handleSubmit();
+      }
+    },
+    [validateAll, handleSubmit]
+  );
+
+  // Handle form field changes and track all fields in state
+  const handleChange = useCallback((v) => {
+    dispatch({ type: ACTIONS.UPDATE_FORM, payload: v });
+  }, []);
 
   return (
     <div className="max-w-3xl mx-auto p-4">
@@ -127,7 +179,7 @@ const MultiStepForm = ({ lang = "en" }) => {
         <Current
           lang={lang}
           value={form}
-          onChange={(v) => dispatch({ type: ACTIONS.UPDATE_FORM, payload: v })}
+          onChange={handleChange}
           errors={validate(form, lang)}
           showErrors={showErrors}
         />
@@ -142,7 +194,6 @@ const MultiStepForm = ({ lang = "en" }) => {
           step={step}
           isFormValid={isFormValid}
         />
-
       </form>
     </div>
   );

@@ -32,7 +32,9 @@ Environment variable for OpenAI (optional):
 - Create '.env' file and your key with following name to openAI API
 `VITE_OPENAI_API_KEY=your_key`
 
+
 Notes:
 
 - The app uses a mock submit (`mockSubmit`) to simulate server submission.
 - The OpenAI call is performed from client-side; No real time server is created.
+- I created both (OpenAI API and LLAMA API (Free version)) to use it 

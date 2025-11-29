@@ -2,7 +2,13 @@ import React, { memo, useState, useEffect } from "react";
 import Modal from "../components/Modal";
 import { t } from "../i18n";
 
-const SuggestionModal = ({ open, initialValue = "", onClose, onAccept, lang = "en" }) => {
+const SuggestionModal = ({
+  open,
+  initialValue = "",
+  onClose,
+  onAccept,
+  lang = "en",
+}) => {
   const [text, setText] = useState(initialValue);
   const [isEditing, setIsEditing] = useState(false);
   const [error, setError] = useState(null);
@@ -33,16 +39,15 @@ const SuggestionModal = ({ open, initialValue = "", onClose, onAccept, lang = "e
       />
 
       <div className="mt-3 flex gap-2 justify-end">
-        <button
-          onClick={onClose}
-          className="px-3 py-1 bg-gray-200 rounded"
-        >
+        <button onClick={onClose} className="px-3 py-1 bg-gray-200 rounded">
           {t(lang, "discard")}
         </button>
 
         <button
           onClick={() => setIsEditing(!isEditing)}
-          className="px-3 py-1 bg-blue-500 text-white rounded"
+          className={`px-3 py-1 bg-blue-500 text-white rounded ${
+            !isEditing ? "bg-blue-600" : "bg-green-500"
+          }`}
         >
           {isEditing ? t(lang, "save") : t(lang, "edit")}
         </button>

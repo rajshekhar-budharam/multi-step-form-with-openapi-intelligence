@@ -1,5 +1,6 @@
-import { GROQ_URL, MODEL_LLAMA, SYSTEM_PROMPT_CONTENT } from "./constants";
+import { GROQ_URL, MODEL_LLAMA, SYSTEM_PROMPT_CONTENT } from "../utils/helper/constants";
 
+// Function to generate suggestion using LLM API
 export async function generateSuggestion(
   prompt,
   { apiKey, timeout = 8000, model = MODEL_LLAMA } = {}

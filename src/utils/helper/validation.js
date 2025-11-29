@@ -1,5 +1,6 @@
-import { t } from '../i18n'
+import { t } from '../../i18n'
 
+// Step 1 validation
 export const validatePersonalInformation = (values, lang = 'en') => {
   const errs = {};
 
@@ -25,6 +26,7 @@ export const validatePersonalInformation = (values, lang = 'en') => {
   return errs;
 };
 
+// Step 2 validation
 export const validateFamilyFinancialInfo = (values, lang = 'en') => {
   const errs = {}
   if (!values.maritalStatus) errs.maritalStatus = t(lang, 'maritalStatusRequired')
@@ -34,6 +36,7 @@ export const validateFamilyFinancialInfo = (values, lang = 'en') => {
   return errs
 }
 
+// Step 3 validation 
 export const validateSituationDescription = (values, lang = 'en') => {
   const errs = {}
   if (!values.currentFinancialSituation) errs.currentFinancialSituation = t(lang, 'currentFinancialSituationRequired')
@@ -42,6 +45,7 @@ export const validateSituationDescription = (values, lang = 'en') => {
   return errs
 }
 
+// Validate based on current step
 export const validateForStep = (stepIndex, values, lang = 'en') => {
   if (stepIndex === 0) return validatePersonalInformation(values, lang)
   if (stepIndex === 1) return validateFamilyFinancialInfo(values, lang)

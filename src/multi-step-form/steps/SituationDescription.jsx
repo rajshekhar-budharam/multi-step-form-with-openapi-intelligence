@@ -1,8 +1,8 @@
 import React, { useState, useCallback } from "react";
 import SuggestionModal from "../SuggestionModal";
-import { generateSuggestion } from "../../utils/api";
+import { generateSuggestion } from "../../api";
 import { t } from "../../i18n";
-import { validateSituationDescription } from "../../utils/validation";
+import { validateSituationDescription } from "../../utils/helper/validation";
 
 export const validate = validateSituationDescription;
 

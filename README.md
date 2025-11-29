@@ -24,11 +24,13 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:5173
+In the output window you should see similar URL to hit the browser.
+Open http://localhost:5174
 
 Environment variable for OpenAI (optional):
 
-- Replace your_key `VITE_OPENAI_API_KEY=your_key` in the '.env' to call OpenAI API.
+- Create '.env' file and your key with following name to openAI API
+`VITE_OPENAI_API_KEY=your_key`
 
 Notes:
 

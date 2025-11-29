@@ -7,7 +7,7 @@ export async function generateSuggestion(
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
   try {
-    const res = await fetch(GROQ_URL, {
+    const response = await fetch(GROQ_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -26,15 +26,15 @@ export async function generateSuggestion(
     });
     clearTimeout(id);
 
-    if (!res.ok) {
-      const text = await res.text().catch(() => "");
-      // If quota exceeded (429) or insufficient_quota, provide a local fallback instead of failing.
+    if (!response.ok) {
+      const text = await response.text().catch(() => "");
+      // If quota exceeded (429) or insufficient_quota, suggest fallback instead of failing.
       try {
         const parsed = JSON.parse(text || "{}");
         const code = parsed?.error?.code;
         const type = parsed?.error?.type;
         if (
-          res.status === 429 ||
+          response.status === 429 ||
           code === "insufficient_quota" ||
           type === "insufficient_quota"
         ) {
@@ -42,16 +42,16 @@ export async function generateSuggestion(
           return localFallbackSuggestion(prompt);
         }
       } catch (e) {
-        throw new Error(`OpenAI error (model ${model}): ${res.status} ${text}`);
+        throw new Error(`OpenAI error (model ${model}): ${response.status} ${text}`);
       }
     }
 
-    const data = await res.json();
-    // Support both chat-completions and older completion shapes
+    const data = await response.json();
+    // Extract text from either chat or completion response
     const chatText = data?.choices?.[0]?.message?.content;
     const completionText = data?.choices?.[0]?.text;
-    const txt = chatText || completionText || "";
-    return txt;
+    const llmResponse = chatText || completionText || "";
+    return llmResponse;
   } catch (err) {
     clearTimeout(id);
     if (err.name === "AbortError") throw new Error("Request timed out");

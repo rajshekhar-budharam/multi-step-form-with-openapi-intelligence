@@ -13,7 +13,7 @@ const translations = {
     discard: 'Discard',
     edit: 'Edit'
     ,
-    // field labels
+
     title: 'Multi-step Form',
     enLabel: 'EN',
     arLabel: 'AR',
@@ -43,6 +43,8 @@ const translations = {
     dobRequired: 'Date of Birth is required',
     genderRequired: 'Gender is required',
     phoneRequired: 'Phone number is required',
+    phoneInvalid: 'Phone number is invalid',
+    phoneTooShort: 'Phone number is too short',
     addressRequired: 'Address is required',
     cityRequired: 'City is required',
     stateRequired: 'State is required',
@@ -118,6 +120,8 @@ const translations = {
     dobRequired: 'تاريخ الميلاد مطلوب',
     genderRequired: 'النوع مطلوب',
     phoneRequired: 'رقم الهاتف مطلوب',
+    phoneInvalid: 'رقم الهاتف غير صالح',
+    phoneTooShort: 'رقم الهاتف قصير جدًا',
     addressRequired: 'العنوان مطلوب',
     cityRequired: 'المدينة مطلوبة',
     stateRequired: 'المحافظة مطلوبة',

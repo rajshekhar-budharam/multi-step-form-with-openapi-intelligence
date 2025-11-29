@@ -3,7 +3,7 @@ export const MODEL_GPT_TURBO = 'gpt-3.5-turbo'
 
 export const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions'
 export const MODEL_LLAMA = 'llama-3.1-8b-instant'
-export const SYSTEM_PROMPT_CONTENT = 'You are a helpful, empathetic assistant that writes concise paragraphs for applications using form values.';
+export const SYSTEM_PROMPT_CONTENT = 'You are a helpful, empathetic assistant that writes concise paragraphs for applications or forms.';
 
 // Select options for form fields
 export const GENDER_OPTIONS = [
